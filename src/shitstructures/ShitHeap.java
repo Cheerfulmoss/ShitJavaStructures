@@ -1,11 +1,9 @@
 package shitstructures;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections;
+import java.util.*;
 
-public class ShitHeap<T extends Comparable<T>> {
-    private ArrayList<T> heap;
+public class ShitHeap<T extends Comparable<T>> implements Queue<T> {
+    private final ArrayList<T> heap;
     private HeapType type = HeapType.MIN;
 
     ShitHeap() {
@@ -27,6 +25,7 @@ public class ShitHeap<T extends Comparable<T>> {
         heap = new ArrayList<>(input);
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append('\\');
@@ -40,21 +39,146 @@ public class ShitHeap<T extends Comparable<T>> {
         return sb.toString();
     }
 
+    @Override
     public int size() {
         return heap.size();
     }
 
-    public void push(T element) {
-        this.heap.add(element);
-        this.upHeap(this.size() - 1);
+    @Override
+    public boolean isEmpty() {
+        return this.heap.isEmpty();
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        return this.heap.contains(o);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return this.heap.iterator();
+    }
+
+    @Override
+    public Object[] toArray() {
+        return this.heap.toArray();
+    }
+
+    @Override
+    public <T1> T1[] toArray(T1[] a) {
+        return this.heap.toArray(a);
     }
 
     public List<T> toList() {
-        return Collections.unmodifiableList(heap);
+        return new ArrayList<>(this.heap);
     }
 
     public HeapType getType() {
         return type;
+    }
+
+    @Override
+    public boolean add(T element) {
+        boolean changed = this.heap.add(element);
+        if (changed) {
+            this.upHeap(this.size() - 1);
+        }
+        return changed;
+    }
+
+    @Override
+    public boolean remove(Object element) {
+        int index = this.heap.indexOf(element);
+        if (index == -1) {
+            return false;
+        }
+        this.swap(index, this.size() - 1);
+        this.heap.remove(this.size() - 1);
+
+        if (index < this.size()) {
+            this.downHeap(index);
+            this.upHeap(index);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return this.heap.containsAll(c);
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends T> c) {
+        boolean changed = this.heap.addAll(c);
+        if (changed) {
+            this.heapify();
+        }
+        return changed;
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        boolean changed = this.heap.removeAll(c);
+        if (changed) {
+            this.heapify();
+        }
+        return changed;
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        boolean changed = this.heap.retainAll(c);
+        if (changed) {
+            this.heapify();
+        }
+        return changed;
+    }
+
+    @Override
+    public void clear() {
+        this.heap.clear();
+    }
+
+    @Override
+    public boolean offer(T element) {
+        return this.add(element);
+    }
+
+    @Override
+    public T remove() {
+        T head = this.poll();
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+        return head;
+    }
+
+    @Override
+    public T poll() {
+        if (this.isEmpty()) {
+            return null;
+        }
+        this.swap(0, this.size() - 1);
+        T element = this.heap.remove(this.size() - 1);
+        this.downHeap(0);
+        return element;
+    }
+
+    @Override
+    public T element() {
+        T head = this.peek();
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+        return head;
+    }
+
+    @Override
+    public T peek() {
+        if (this.isEmpty()) {
+            return null;
+        }
+        return this.heap.getFirst();
     }
 
     private void heapify() {
@@ -81,6 +205,7 @@ public class ShitHeap<T extends Comparable<T>> {
     private int rightChildIndex(int i) {
         return 2 * i + 2;
     }
+
     private void upHeap(int index) {
         int parentIndex = this.parentIndex(index);
         if (parentIndex == this.type.getValue()) {
@@ -111,12 +236,5 @@ public class ShitHeap<T extends Comparable<T>> {
             this.swap(index, minIndex);
             this.downHeap(minIndex);
         }
-    }
-
-    public static void main(String[] args) {
-        ShitHeap<Integer> heap = new ShitHeap<>(List.of(5, 3, 8, 1, 10));
-        System.out.println(heap);
-        heap.push(0);
-        System.out.println(heap);
     }
 }
