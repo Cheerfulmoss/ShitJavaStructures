@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 class ShitHeapTest {
-    private final int test_count = 100;
+    private final int testCount = 100;
 
     private List<Integer> randomIntegerList(int size) {
         Random random = new Random();
@@ -59,7 +59,7 @@ class ShitHeapTest {
     void testInitialisation() {
         Random rand = new Random();
 
-        for (int test = 0; test < test_count; test++) {
+        for (int test = 0; test < testCount; test++) {
             int listLength = rand.nextInt(20) + test + 1;
             List<Integer> inputList = this.randomIntegerList(listLength);
 
@@ -75,7 +75,7 @@ class ShitHeapTest {
     void heapOrdering() {
         Random rand = new Random();
 
-        for (int test = 0; test < test_count; test++) {
+        for (int test = 0; test < testCount; test++) {
             List<Integer> testInputs = this.randomIntegerList(rand.nextInt(20) + test + 1);
             ShitHeap<Integer> heap = new ShitHeap<>();
 
@@ -91,7 +91,7 @@ class ShitHeapTest {
     void heapRemove() {
         Random rand = new Random();
 
-        for (int test = 0; test < test_count; test++) {
+        for (int test = 0; test < testCount; test++) {
             List<Integer> testInputs = this.randomIntegerList(rand.nextInt(20) + test + 1);
             ShitHeap<Integer> heap = new ShitHeap<>(testInputs);
             int removeCount = rand.nextInt(testInputs.size() - 1);
