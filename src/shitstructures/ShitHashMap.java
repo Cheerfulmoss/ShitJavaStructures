@@ -1,5 +1,6 @@
 package shitstructures;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -81,12 +82,17 @@ public class ShitHashMap<K, V> implements Map<K, V> {
         return root.toString();
     }
 
+    public String prettyToString() {
+        return root.prettyToString();
+    }
+
     public static void main(String[] args) {
         ShitHashMap<Integer, Character> shm = new ShitHashMap<>(2);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 15; i++) {
             shm.put(i, (char) (('a' + i) % 'z'));
             System.out.printf("ShitHashMap: %s%n", shm);
         }
+        System.out.println(shm.prettyToString());
 
         System.out.printf("Me when %d -> %c%n", 1, shm.get(1));
         System.out.printf("Me when %d -> %c%n", 2, shm.get(2));

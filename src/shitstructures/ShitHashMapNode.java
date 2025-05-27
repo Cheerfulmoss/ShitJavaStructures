@@ -1,6 +1,7 @@
 package shitstructures;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ShitHashMapNode<K, V> {
     private int capacity;
@@ -38,16 +39,13 @@ public class ShitHashMapNode<K, V> {
             kvs[idealLocation] = ShitEither.left(new ShitPair<>(key, value));
             return null;
         }
-        // A pair is there and the current map is full.
-        // Diff Key:
-        //     Remove old pair -> Make it a map -> insert old and new.
-        // Else:
-        //     Replace the pair.
+        // If they same key, replace da value.
         if (se.isLeft() && se.getLeft().getFirst().equals(key)) {
             V old = se.getLeft().getSecond();
             kvs[idealLocation] = ShitEither.left(new ShitPair<>(key, value));
             return old;
         }
+        // If they not same key, make into a node and put into that!
         if (se.isLeft()) {
             ShitHashMapNode<K, V> node = new ShitHashMapNode<>(capacity);
             node.put(se.getLeft().getFirst(), se.getLeft().getSecond());
@@ -55,7 +53,7 @@ public class ShitHashMapNode<K, V> {
             kvs[idealLocation] = ShitEither.right(node);
             return null;
         }
-        // A map is there.
+        // A map is there! :D
         if (se.isRight()) {
             return kvs[idealLocation].getRight().put(key, value);
         }
@@ -94,6 +92,33 @@ public class ShitHashMapNode<K, V> {
         return sb.toString();
     }
 
+    public String prettyToString() {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        int total = (int) Arrays.stream(kvs).filter(Objects::nonNull).count();
+        sb.append("|\n");
+        for (int i = 0; i < kvs.length; i++) {
+            ShitEither<ShitPair<K, V>, ShitHashMapNode<K, V>> se = kvs[i];
+            if (se == null) {
+                continue;
+            }
+            count++;
+            if (se.isLeft()) {
+                sb.append("\t").append(se.getLeft());
+            } else if (se.isRight()) {
+                String formattedNode = se.getRight().prettyToString();
+                sb.append(insertLeadingTab(formattedNode));
+            }
+            if (count < total) {
+                sb.append(",\n");
+            } else {
+                sb.append("\n");
+            }
+        }
+        sb.append("|");
+        return sb.toString();
+    }
+
     public int size() {
         int total = 0;
         for (ShitEither<ShitPair<K, V>, ShitHashMapNode<K, V>> se : kvs) {
@@ -110,14 +135,10 @@ public class ShitHashMapNode<K, V> {
     }
 
     public boolean containsValue(V value) {
-        for (ShitPair<K, V>, ShitHashMapNode<K, V> se :
-                Arrays.stream(kvs)
-                        .filter( e -> e != null && e.isLeft() )
-                        .map(e -> e.getLeft() )
-                        .collect(ShitPair<K, V>)) {
-
-        }
-        return false;
+        return Arrays.stream(kvs)
+                .filter( e -> e != null && e.isLeft() )
+                .map(ShitEither::getLeft)
+                .anyMatch( e -> e.getSecond().equals(value) );
     }
 
     private int saltedHash(K key) {
@@ -136,5 +157,9 @@ public class ShitHashMapNode<K, V> {
         mixed *= 0xc2b2ae35;
         mixed ^= (mixed >>> 16);
         return mixed;
+    }
+
+    private String insertLeadingTab(String str) {
+        return str.lines().map( e -> "\t" + e ).collect(Collectors.joining("\n"));
     }
 }
