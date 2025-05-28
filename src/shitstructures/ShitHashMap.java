@@ -1,13 +1,11 @@
 package shitstructures;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class ShitHashMap<K, V> implements Map<K, V> {
-    private ShitHashMapNode<K, V> root;
+    private final ShitHashMapNode<K, V> root;
 
     ShitHashMap(int capacity) {
         root = new ShitHashMapNodeMap<>(capacity);
@@ -30,7 +28,7 @@ public class ShitHashMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean containsValue(Object value) {
-        return false;
+        return values().contains(value);
     }
 
     @Override
@@ -45,11 +43,14 @@ public class ShitHashMap<K, V> implements Map<K, V> {
 
     @Override
     public V remove(Object key) {
-        return null;
+        return root.remove((K) key);
     }
 
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
+        for (Entry<? extends K, ? extends V> entry : m.entrySet()) {
+            put(entry.getKey(), entry.getValue());
+        }
     }
 
     @Override
@@ -59,17 +60,17 @@ public class ShitHashMap<K, V> implements Map<K, V> {
 
     @Override
     public Set<K> keySet() {
-        return Set.of();
+        return root.keySet();
     }
 
     @Override
     public Collection<V> values() {
-        return List.of();
+        return root.values();
     }
 
     @Override
     public Set<Entry<K, V>> entrySet() {
-        return Set.of();
+        return root.entrySet();
     }
 
     public String toString() {
@@ -95,5 +96,8 @@ public class ShitHashMap<K, V> implements Map<K, V> {
         System.out.printf("Me when %d -> %c%n", 5, shm.get(5));
         System.out.printf("Me when %s -> %c%n", "a", shm.get("a"));
         System.out.printf("Size: %d%n", shm.size());
+        System.out.printf("Key set: %s%n", shm.keySet());
+        System.out.printf("Values: %s%n", shm.values());
+        System.out.printf("Entry set: %s%n", shm.entrySet());
     }
 }

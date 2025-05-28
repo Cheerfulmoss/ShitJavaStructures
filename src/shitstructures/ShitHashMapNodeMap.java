@@ -1,20 +1,16 @@
 package shitstructures;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
     private ShitHashMapNode<K, V>[] kvs;
-    private int capacity;
-    private int size;
-    private int salt;
+    private final int capacity;
+    private final int salt;
 
     ShitHashMapNodeMap(int capacity) {
         this.capacity = capacity;
-        kvs = (ShitHashMapNode<K, V>[]) new ShitHashMapNode[capacity];
+        kvs = new ShitHashMapNode[capacity];
         salt = ((Integer)System.identityHashCode(this)).hashCode();
     }
 
@@ -49,15 +45,31 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
                     return result;
                 }
             }
-            default -> {
-            }
+            default -> {return null;}
         }
-        return null;
     }
 
     @Override
     public V remove(K key) {
-        return null;
+        int idealLocation = saltedHash(key) % capacity;
+
+        switch (kvs[idealLocation]) {
+            case ShitHashMapNodePair<K, V> nodePair -> {
+                V value = nodePair.remove(key);
+                if (value != null) {
+                    kvs[idealLocation] = null;
+                }
+                return value;
+            }
+            case ShitHashMapNodeMap<K, V> nodeMap -> {
+                V result = nodeMap.remove(key);
+                if (nodeMap.isEmpty()) {
+                    kvs[idealLocation] = null;
+                }
+                return result;
+            }
+            default -> {return null;}
+        }
     }
 
     @Override
@@ -70,27 +82,48 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
 
     @Override
     public void clear() {
-        kvs = (ShitHashMapNode<K, V>[]) new ShitHashMapNode[capacity];
+        kvs = new ShitHashMapNode[capacity];
     }
 
     @Override
     public Set<K> keySet() {
-        return Set.of();
+        Set<K> keys = new HashSet<>();
+        for (ShitHashMapNode<K, V> node : kvs) {
+            if (node == null) {
+                continue;
+            }
+            keys.addAll(node.keySet());
+        }
+        return keys;
     }
 
     @Override
-    public Set<V> values() {
-        return Set.of();
+    public Collection<V>values() {
+        List<V> values = new ArrayList<>();
+        for (ShitHashMapNode<K, V> node : kvs) {
+            if (node == null) {
+                continue;
+            }
+            values.addAll(node.values());
+        }
+        return values;
     }
 
     @Override
     public Set<Map.Entry<K, V>> entrySet() {
-        return Set.of();
+        Set<Map.Entry<K, V>> entries = new HashSet<>();
+        for (ShitHashMapNode<K, V> node : kvs) {
+            if (node == null) {
+                continue;
+            }
+            entries.addAll(node.entrySet());
+        }
+        return entries;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return Arrays.stream(kvs).allMatch(Objects::isNull);
     }
 
     @Override
@@ -111,8 +144,7 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("|");
-        for (int i = 0; i < kvs.length; i++) {
-            ShitHashMapNode<K, V> se = kvs[i];
+        for (ShitHashMapNode<K, V> se : kvs) {
             if (se == null) {
                 continue;
             }
@@ -127,8 +159,7 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
     public String prettyToString() {
         StringBuilder sb = new StringBuilder();
         sb.append("|\n");
-        for (int i = 0; i < kvs.length; i++) {
-            ShitHashMapNode<K, V> se = kvs[i];
+        for (ShitHashMapNode<K, V> se : kvs) {
             if (se == null) {
                 continue;
             }

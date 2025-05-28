@@ -1,5 +1,7 @@
 package shitstructures;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,8 +56,8 @@ public class ShitHashMapNodePair<K, V> implements ShitHashMapNode<K, V> {
     }
 
     @Override
-    public Set<V> values() {
-        return Set.of(pair.getSecond());
+    public Collection<V> values() {
+        return List.of(pair.getSecond());
     }
 
     @Override
