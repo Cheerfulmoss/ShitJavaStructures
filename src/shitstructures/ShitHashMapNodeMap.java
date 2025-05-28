@@ -1,6 +1,8 @@
 package shitstructures;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,19 +31,25 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
     public V put(K key, V value) {
         int idealLocation = saltedHash(key) % capacity;
 
-        if (kvs[idealLocation] == null) {
-            kvs[idealLocation] = new ShitHashMapNodePair<>(key, value);
-            return null;
-        }
-        if (kvs[idealLocation] instanceof ShitHashMapNodeMap<K, V>) {
-            return kvs[idealLocation].put(key, value);
-        }
-        if (kvs[idealLocation] instanceof ShitHashMapNodePair<K,V>) {
-            if (kvs[idealLocation].put(key, value) == null) {
-                ShitHashMapNode<K, V> oldPair = kvs[idealLocation];
-                kvs[idealLocation] = new ShitHashMapNodeMap<K, V>(capacity);
-                kvs[idealLocation].put(oldPair.getKey(), oldPair.getValue());
-                return kvs[idealLocation].put(key, value);
+        switch (kvs[idealLocation]) {
+            case null -> {
+                kvs[idealLocation] = new ShitHashMapNodePair<>(key, value);
+                return null;
+            }
+            case ShitHashMapNodeMap<K, V> nodeMap -> {
+                return nodeMap.put(key, value);
+            }
+            case ShitHashMapNodePair<K, V> nodePair -> {
+                V result = nodePair.put(key, value);
+                if (result == null) {
+                    kvs[idealLocation] = new ShitHashMapNodeMap<>(capacity);
+                    kvs[idealLocation].put(nodePair.getKey(), nodePair.getValue());
+                    return kvs[idealLocation].put(key, value);
+                } else {
+                    return result;
+                }
+            }
+            default -> {
             }
         }
         return null;
@@ -54,7 +62,10 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
 
     @Override
     public int size() {
-        return 0;
+        return Arrays.stream(kvs)
+                .filter(Objects::nonNull)
+                .mapToInt(ShitHashMapNode::size)
+                .sum();
     }
 
     @Override
