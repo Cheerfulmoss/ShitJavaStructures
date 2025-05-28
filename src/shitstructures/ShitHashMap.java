@@ -10,7 +10,7 @@ public class ShitHashMap<K, V> implements Map<K, V> {
     private ShitHashMapNode<K, V> root;
 
     ShitHashMap(int capacity) {
-        root = new ShitHashMapNode<>(capacity);
+        root = new ShitHashMapNodeMap<>(capacity);
     }
 
     @Override
@@ -30,22 +30,17 @@ public class ShitHashMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean containsValue(Object value) {
-        return root.containsValue((V) value);
+        return false;
     }
 
     @Override
     public V get(Object key) {
-        if (key == null) {
-            return null;
-        }
         return root.get((K) key);
     }
 
     @Override
     public V put(K key, V value) {
-        V was = root.get(key);
-        root.put(key, value);
-        return was;
+        return root.put(key, value);
     }
 
     @Override
@@ -55,12 +50,11 @@ public class ShitHashMap<K, V> implements Map<K, V> {
 
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
-
     }
 
     @Override
     public void clear() {
-        root = new ShitHashMapNode<>(root.getCapacity());
+        root.clear();
     }
 
     @Override
@@ -88,7 +82,7 @@ public class ShitHashMap<K, V> implements Map<K, V> {
 
     public static void main(String[] args) {
         ShitHashMap<Integer, Character> shm = new ShitHashMap<>(10);
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 10; i++) {
             shm.put(i, (char) (('a' + (i % 26))));
             System.out.printf("ShitHashMap: %s%n", shm);
         }
