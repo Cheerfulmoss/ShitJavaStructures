@@ -87,9 +87,9 @@ public class ShitHashMap<K, V> implements Map<K, V> {
     }
 
     public static void main(String[] args) {
-        ShitHashMap<Integer, Character> shm = new ShitHashMap<>(2);
-        for (int i = 0; i < 15; i++) {
-            shm.put(i, (char) (('a' + i) % 'z'));
+        ShitHashMap<Integer, Character> shm = new ShitHashMap<>(10);
+        for (int i = 0; i < 500; i++) {
+            shm.put(i, (char) (('a' + (i % 26))));
             System.out.printf("ShitHashMap: %s%n", shm);
         }
         System.out.println(shm.prettyToString());
