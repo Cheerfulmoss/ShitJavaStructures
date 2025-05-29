@@ -6,7 +6,7 @@ import java.util.Set;
 
 // The recursive Map node itself does not need to actually do
 // anything when the Map.Entry methods are called.
-interface ShitHashMapNode<K, V> extends Map.Entry<K, V> {
+interface HashMapNode<K, V> extends Map.Entry<K, V> {
     V get(K key);
     V put(K key, V value);
     V remove(K key);

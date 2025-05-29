@@ -3,14 +3,14 @@ package shitstructures;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
-    private ShitHashMapNode<K, V>[] kvs;
+public class HashMapNodeMap<K, V> implements HashMapNode<K, V> {
+    private HashMapNode<K, V>[] kvs;
     private final int capacity;
     private final int salt;
 
-    ShitHashMapNodeMap(int capacity) {
+    HashMapNodeMap(int capacity) {
         this.capacity = capacity;
-        kvs = new ShitHashMapNode[capacity];
+        kvs = new HashMapNode[capacity];
         salt = ((Integer)System.identityHashCode(this)).hashCode();
     }
 
@@ -29,16 +29,16 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
 
         switch (kvs[idealLocation]) {
             case null -> {
-                kvs[idealLocation] = new ShitHashMapNodePair<>(key, value);
+                kvs[idealLocation] = new HashMapNodePair<>(key, value);
                 return null;
             }
-            case ShitHashMapNodeMap<K, V> nodeMap -> {
+            case HashMapNodeMap<K, V> nodeMap -> {
                 return nodeMap.put(key, value);
             }
-            case ShitHashMapNodePair<K, V> nodePair -> {
+            case HashMapNodePair<K, V> nodePair -> {
                 V result = nodePair.put(key, value);
                 if (result == null) {
-                    kvs[idealLocation] = new ShitHashMapNodeMap<>(capacity);
+                    kvs[idealLocation] = new HashMapNodeMap<>(capacity);
                     kvs[idealLocation].put(nodePair.getKey(), nodePair.getValue());
                     return kvs[idealLocation].put(key, value);
                 } else {
@@ -54,14 +54,14 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
         int idealLocation = saltedHash(key) % capacity;
 
         switch (kvs[idealLocation]) {
-            case ShitHashMapNodePair<K, V> nodePair -> {
+            case HashMapNodePair<K, V> nodePair -> {
                 V value = nodePair.remove(key);
                 if (value != null) {
                     kvs[idealLocation] = null;
                 }
                 return value;
             }
-            case ShitHashMapNodeMap<K, V> nodeMap -> {
+            case HashMapNodeMap<K, V> nodeMap -> {
                 V result = nodeMap.remove(key);
                 if (nodeMap.isEmpty()) {
                     kvs[idealLocation] = null;
@@ -76,19 +76,19 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
     public int size() {
         return Arrays.stream(kvs)
                 .filter(Objects::nonNull)
-                .mapToInt(ShitHashMapNode::size)
+                .mapToInt(HashMapNode::size)
                 .sum();
     }
 
     @Override
     public void clear() {
-        kvs = new ShitHashMapNode[capacity];
+        kvs = new HashMapNode[capacity];
     }
 
     @Override
     public Set<K> keySet() {
         Set<K> keys = new HashSet<>();
-        for (ShitHashMapNode<K, V> node : kvs) {
+        for (HashMapNode<K, V> node : kvs) {
             if (node == null) {
                 continue;
             }
@@ -100,7 +100,7 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
     @Override
     public Collection<V>values() {
         List<V> values = new ArrayList<>();
-        for (ShitHashMapNode<K, V> node : kvs) {
+        for (HashMapNode<K, V> node : kvs) {
             if (node == null) {
                 continue;
             }
@@ -112,7 +112,7 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
     @Override
     public Set<Map.Entry<K, V>> entrySet() {
         Set<Map.Entry<K, V>> entries = new HashSet<>();
-        for (ShitHashMapNode<K, V> node : kvs) {
+        for (HashMapNode<K, V> node : kvs) {
             if (node == null) {
                 continue;
             }
@@ -144,7 +144,7 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("|");
-        for (ShitHashMapNode<K, V> se : kvs) {
+        for (HashMapNode<K, V> se : kvs) {
             if (se == null) {
                 continue;
             }
@@ -159,7 +159,7 @@ public class ShitHashMapNodeMap<K, V> implements ShitHashMapNode<K, V> {
     public String prettyToString() {
         StringBuilder sb = new StringBuilder();
         sb.append("|\n");
-        for (ShitHashMapNode<K, V> se : kvs) {
+        for (HashMapNode<K, V> se : kvs) {
             if (se == null) {
                 continue;
             }

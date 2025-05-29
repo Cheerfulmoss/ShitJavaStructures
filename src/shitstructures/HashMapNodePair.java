@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ShitHashMapNodePair<K, V> implements ShitHashMapNode<K, V> {
+public class HashMapNodePair<K, V> implements HashMapNode<K, V> {
     private ShitPair<K, V> pair;
 
-    ShitHashMapNodePair(K key, V value) {
+    HashMapNodePair(K key, V value) {
         pair = new ShitPair<>(key, value);
     }
 

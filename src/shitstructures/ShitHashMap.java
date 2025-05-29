@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class ShitHashMap<K, V> implements Map<K, V> {
-    private final ShitHashMapNode<K, V> root;
+    private final HashMapNode<K, V> root;
 
     ShitHashMap(int capacity) {
-        root = new ShitHashMapNodeMap<>(capacity);
+        root = new HashMapNodeMap<>(capacity);
     }
 
     @Override
@@ -82,8 +82,8 @@ public class ShitHashMap<K, V> implements Map<K, V> {
     }
 
     public static void main(String[] args) {
-        ShitHashMap<Integer, Character> shm = new ShitHashMap<>(10);
-        for (int i = 0; i < 10; i++) {
+        ShitHashMap<Integer, Character> shm = new ShitHashMap<>(2);
+        for (int i = 0; i < 20; i++) {
             shm.put(i, (char) (('a' + (i % 26))));
             System.out.printf("ShitHashMap: %s%n", shm);
         }

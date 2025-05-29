@@ -1,10 +1,11 @@
-//package shitstructures;
-//
-//import java.util.Collection;
-//import java.util.Iterator;
-//import java.util.List;
-//import java.util.ListIterator;
-//
+package shitstructures;
+
+import java.util.*;
+
+public class ShitList<T> extends ArrayList<T> {
+
+}
+
 //public class ShitList<T> implements List<T> {
 //    private T[] data;
 //    private int size;
