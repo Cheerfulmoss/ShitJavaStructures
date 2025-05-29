@@ -61,7 +61,7 @@ public class ShitReflectionList<T> implements ReflectionList<T> {
 
     @Override
     public boolean addAll(int index, Collection<? extends T> c) {
-        return elems.addAll(index, c);
+        return elems.addAll(reflectionToReal(index), c);
     }
 
     @Override
@@ -84,8 +84,7 @@ public class ShitReflectionList<T> implements ReflectionList<T> {
         if (index >= elems.size() * 2) {
             throw new IndexOutOfBoundsException();
         }
-        index = reflectionToReal(index);
-        return elems.get(index);
+        return elems.get(reflectionToReal(index));
     }
 
     @Override
@@ -93,13 +92,15 @@ public class ShitReflectionList<T> implements ReflectionList<T> {
         if (index >= elems.size() * 2) {
             throw new IndexOutOfBoundsException();
         }
-        index = reflectionToReal(index);
-        return elems.set(index, element);
+        return elems.set(reflectionToReal(index), element);
     }
 
     @Override
     public void add(int index, T element) {
-        elems.add(index, element);
+        if (index >= elems.size() * 2) {
+            throw new IndexOutOfBoundsException();
+        }
+        elems.add(reflectionToReal(index), element);
     }
 
     @Override
