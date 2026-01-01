@@ -2,6 +2,8 @@ package shitstructures.functional;
 
 import java.util.function.*;
 
+// TODO: Rewrite this entire thing so that it can be memoized
+// TODO: Make not shit :3
 public abstract class Trampoline<T> {
 
     public abstract T run();
